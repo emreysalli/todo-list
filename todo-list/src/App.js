@@ -1,0 +1,143 @@
+import React, { useState } from "react";
+import "./App.css";
+import { Task } from "./components/Task.js";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from '@mui/icons-material/Check';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
+function App() {
+  //css
+  const sectionTitle = {
+    fontSize: 36,
+    fontWeight: "bold",
+  };
+  const input = {
+    backgroundColor: "#fff",
+    borderRadius: 60,
+    borderColor: "#C0C0C0",
+    borderWidth: 1,
+    width: 250,
+    height: 40,
+    fontSize: "16px",
+  };
+  const addWrapper = {
+    width: 40,
+    height: 40,
+    backgroundColor: "#fff",
+    borderRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#C0C0C0",
+    borderWidth: 1,
+    margin: "5px",
+    fontSize: "24px",
+  };
+  const itemBox = {
+    backgroundColor: "#FFFFFF",
+    padding: 8,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+    color: "#fff",
+    marginTop: 30,
+    display: "flex",
+  };
+
+
+  const [task, setTask] = useState("");
+  const [taskItems, setTaskItems] = useState([]);
+  const [priority, setPriority] = useState("");
+  const priorityDict={"Low":"green","Medium":"yellow","High":"red","Imeditily":"Blue"}; 
+
+  const handleChange = (event) => {
+    setPriority(event.target.value);
+  };
+
+  const handleAddTask = event => {
+    event.preventDefault();
+    if (task !== "") {
+      let taskDict={text:task, completed:false, pri:priority};
+      setTaskItems([...taskItems, taskDict]);
+      setPriority("");
+      setTask("");
+    }
+  };
+
+  const completedTask=(index)=>{
+    let itemsCopy = [...taskItems];
+
+    itemsCopy[index].completed=!itemsCopy[index].completed;
+
+    setTaskItems(itemsCopy);
+  }
+
+  const deleteTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
+  };
+
+  const changeColor=(color)=>{
+    console.log("emre")
+  };
+  return (
+    <div className="App">
+      <h2 style={sectionTitle}>TODO LIST</h2>
+      <form onSubmit={handleAddTask}>
+        <input
+          style={input}
+          placeholder={"Write a task"}
+          value={task}
+          onChange={(event) => setTask(event.target.value)}
+        />
+        <button type="submit" style={addWrapper}>
+          +
+        </button>
+        <Select
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select-standard"
+          value={priority}
+          onChange={handleChange}
+          label="Priority"
+        >
+        {Object.keys(priorityDict).map(function(key, index){
+          return (
+            <MenuItem value={key} key={index}>{key}</MenuItem>
+          );
+        })}
+      </Select>
+      </form>
+
+
+      {taskItems.map((item, index) => {
+        return (
+          <div style={{...itemBox, backgroundColor:priorityDict[item.pri]}} key={index} id={index}>
+            <Task text={item.text} id={index} complete={item.completed}/>
+            <div className="buttons">
+              <IconButton
+                aria-label="delete"
+                type="submit"
+                onClick={() => completedTask(index)}
+              >
+                <CheckIcon />
+              </IconButton>
+              <IconButton
+                aria-label="delete"
+                type="submit"
+                onClick={() => deleteTask(index)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+export default App;
