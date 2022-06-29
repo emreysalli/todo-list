@@ -6,7 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from '@mui/icons-material/Check';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 function App() {
   //css
   const sectionTitle = {
@@ -47,11 +48,11 @@ function App() {
     display: "flex",
   };
 
-
+  document.title="TODO LIST";
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
   const [priority, setPriority] = useState("");
-  const priorityDict={"Low":"green","Medium":"yellow","High":"red","Imeditily":"Blue"}; 
+  const priorityDict={"Low":"green","Medium":"yellow","High":"orange","Immediately":"red"}; 
 
   const handleChange = (event) => {
     setPriority(event.target.value);
@@ -60,7 +61,7 @@ function App() {
   const handleAddTask = event => {
     event.preventDefault();
     if (task !== "") {
-      let taskDict={text:task, completed:false, pri:priority};
+      let taskDict={text:task, isComplete:false, taskPriority:priority};
       setTaskItems([...taskItems, taskDict]);
       setPriority("");
       setTask("");
@@ -70,8 +71,8 @@ function App() {
   const completedTask=(index)=>{
     let itemsCopy = [...taskItems];
 
-    itemsCopy[index].completed=!itemsCopy[index].completed;
-
+    itemsCopy[index].isComplete=!itemsCopy[index].isComplete;
+    
     setTaskItems(itemsCopy);
   }
 
@@ -80,10 +81,22 @@ function App() {
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
   };
+  var filtered=taskItems;
+  const allClick=()=>{
+    filtered=taskItems;
+  }
+  const activeClick=()=>{
+    filtered=taskItems.filter((item)=>{
+      return item.isComplete===false;
+    })
+  }
 
-  const changeColor=(color)=>{
-    console.log("emre")
-  };
+  const completedClick=()=>{
+    filtered=taskItems.filter((item)=>{
+      return item.isComplete===true;
+    })
+  }
+
   return (
     <div className="App">
       <h2 style={sectionTitle}>TODO LIST</h2>
@@ -111,12 +124,16 @@ function App() {
         })}
       </Select>
       </form>
+      <ButtonGroup style={{display:"flex",justifyContent:"flex-start",margin:"10px 0px"}} size="medium" variant="outlined" aria-label=" button group">
+        <Button style={{color:"black", borderColor:"black"}} onClick={() => allClick()}>All</Button>
+        <Button style={{color:"black", borderColor:"black"}} onClick={() => activeClick()}>Active</Button>
+        <Button style={{color:"black", borderColor:"black"}} onClick={() => completedClick()}>Completed</Button>
+      </ButtonGroup>
 
-
-      {taskItems.map((item, index) => {
+      {filtered.map((item, index) => {
         return (
-          <div style={{...itemBox, backgroundColor:priorityDict[item.pri]}} key={index} id={index}>
-            <Task text={item.text} id={index} complete={item.completed}/>
+          <div style={{...itemBox, backgroundColor:priorityDict[item.taskPriority]}} key={index} id={index}>
+            <Task text={item.text} id={index} complete={item.isComplete}/>
             <div className="buttons">
               <IconButton
                 aria-label="delete"
