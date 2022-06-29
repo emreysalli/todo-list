@@ -125,9 +125,9 @@ function App() {
       </Select>
       </form>
       <ButtonGroup style={{display:"flex",justifyContent:"flex-start",margin:"10px 0px"}} size="medium" variant="outlined" aria-label=" button group">
-        <Button style={{color:"black", borderColor:"black"}} onClick={() => allClick()}>All</Button>
-        <Button style={{color:"black", borderColor:"black"}} onClick={() => activeClick()}>Active</Button>
-        <Button style={{color:"black", borderColor:"black"}} onClick={() => completedClick()}>Completed</Button>
+        <Button style={{color:"black", borderColor:"black"}} type="submit" onClick={() => allClick()}>All</Button>
+        <Button style={{color:"black", borderColor:"black"}} type="submit" onClick={() => activeClick()}>Active</Button>
+        <Button style={{color:"black", borderColor:"black"}} type="submit" onClick={() => completedClick()}>Completed</Button>
       </ButtonGroup>
 
       {filtered.map((item, index) => {
