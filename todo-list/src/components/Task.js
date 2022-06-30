@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Task(props) {
+function Task(props){
 
   let textDecoration;
   let opacity;
@@ -25,4 +25,6 @@ export function Task(props) {
       </span>
     </div>
   );
-}
+};
+
+export default React.memo(Task);
