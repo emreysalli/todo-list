@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import uuid from "react-uuid";
 import "./App.css";
 import Task from "./components/Task.js";
 import IconButton from "@mui/material/IconButton";
@@ -10,9 +11,8 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 
 function App() {
-
   document.title = "TODO LIST";
-  
+
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
   const [filteredTask, setFilteredTask] = useState([]);
@@ -31,7 +31,12 @@ function App() {
   const handleAddTask = (event) => {
     event.preventDefault();
     if (task !== "") {
-      let taskDict = {id: taskItems.length, text: task, isComplete: false, taskPriority: priority };
+      let taskDict = {
+        id: uuid(),
+        text: task,
+        isComplete: false,
+        taskPriority: priority,
+      };
       setTaskItems([...taskItems, taskDict]);
       setPriority("");
       setTask("");
@@ -40,7 +45,7 @@ function App() {
 
   const completedTask = (id) => {
     let itemsCopy = [...taskItems];
-    let index=itemsCopy.findIndex(item=>item.id===id);
+    let index = itemsCopy.findIndex((item) => item.id === id);
 
     itemsCopy[index].isComplete = !itemsCopy[index].isComplete;
 
@@ -49,7 +54,7 @@ function App() {
 
   const deleteTask = (id) => {
     let itemsCopy = [...taskItems];
-    let index=itemsCopy.findIndex(item=>item.id===id);
+    let index = itemsCopy.findIndex((item) => item.id === id);
     itemsCopy.splice(index, 1);
 
     setTaskItems(itemsCopy);
@@ -69,29 +74,26 @@ function App() {
   };
 
   useEffect(() => {
-
     let filtered = taskItems.filter((item) => {
       return item.isComplete === true;
     });
 
-    if(filtered.length===0){
-      document.querySelector(".clearCompBtn").style.display="none";
-    }else{
-      document.querySelector(".clearCompBtn").style.display="inline-block";
+    if (filtered.length === 0) {
+      document.querySelector(".clearCompBtn").style.display = "none";
+    } else {
+      document.querySelector(".clearCompBtn").style.display = "inline-block";
     }
 
     setFilteredTask(taskItems);
-
   }, [taskItems]);
 
-  const clearCompleted=()=>{
-    
+  const clearCompleted = () => {
     let filtered = taskItems.filter((item) => {
       return item.isComplete === false;
     });
 
     setTaskItems(filtered);
-  }
+  };
 
   return (
     <div className="App">
@@ -151,7 +153,14 @@ function App() {
           Completed
         </Button>
       </ButtonGroup>
-      <Button className="clearCompBtn" size="medium" style={{color:"black"}} onClick={() => clearCompleted()}>Clear completed</Button>
+      <Button
+        className="clearCompBtn"
+        size="medium"
+        style={{ color: "black" }}
+        onClick={() => clearCompleted()}
+      >
+        Clear completed
+      </Button>
 
       {filteredTask.map((item, index) => {
         return (
