@@ -56,24 +56,27 @@ function App() {
   const handleAddTask = (event) => {
     event.preventDefault();
     if (task !== "") {
-      let taskDict = { text: task, isComplete: false, taskPriority: priority };
+      let taskDict = {id: taskItems.length, text: task, isComplete: false, taskPriority: priority };
       setTaskItems([...taskItems, taskDict]);
       setPriority("");
       setTask("");
     }
   };
 
-  const completedTask = (index) => {
+  const completedTask = (id) => {
     let itemsCopy = [...taskItems];
+    let index=itemsCopy.findIndex(item=>item.id===id);
 
     itemsCopy[index].isComplete = !itemsCopy[index].isComplete;
 
     setTaskItems(itemsCopy);
   };
 
-  const deleteTask = (index) => {
+  const deleteTask = (id) => {
     let itemsCopy = [...taskItems];
+    let index=itemsCopy.findIndex(item=>item.id===id);
     itemsCopy.splice(index, 1);
+
     setTaskItems(itemsCopy);
   };
 
@@ -83,7 +86,7 @@ function App() {
       return;
     }
 
-    const filtered = taskItems.filter((item) => {
+    let filtered = taskItems.filter((item) => {
       return item.isComplete === complete;
     });
 
@@ -91,8 +94,29 @@ function App() {
   };
 
   useEffect(() => {
+
+    let filtered = taskItems.filter((item) => {
+      return item.isComplete === true;
+    });
+
+    if(filtered.length===0){
+      document.querySelector(".clearCompBtn").style.display="none";
+    }else{
+      document.querySelector(".clearCompBtn").style.display="inline-block";
+    }
+
     setFilteredTask(taskItems);
+
   }, [taskItems]);
+
+  const clearCompleted=()=>{
+    
+    let filtered = taskItems.filter((item) => {
+      return item.isComplete === false;
+    });
+
+    setTaskItems(filtered);
+  }
 
   return (
     <div className="App">
@@ -127,8 +151,8 @@ function App() {
         className="filterBtnGroup"
         size="medium"
         variant="outlined"
-        exclusive
         aria-label="outlined button group"
+        exclusive="true"
       >
         <Button
           style={{ color: "black", borderColor: "black" }}
@@ -152,6 +176,7 @@ function App() {
           Completed
         </Button>
       </ButtonGroup>
+      <Button className="clearCompBtn" size="medium" style={{color:"black"}} onClick={() => clearCompleted()}>Clear completed</Button>
 
       {filteredTask.map((item, index) => {
         return (
@@ -161,21 +186,18 @@ function App() {
             }}
             className="itemBox"
             key={index}
-            id={index}
           >
             <Task text={item.text} id={index} complete={item.isComplete} />
             <div className="buttons">
               <IconButton
                 aria-label="delete"
-                type="submit"
-                onClick={() => completedTask(index)}
+                onClick={() => completedTask(item.id)}
               >
                 <CheckIcon />
               </IconButton>
               <IconButton
                 aria-label="delete"
-                type="submit"
-                onClick={() => deleteTask(index)}
+                onClick={() => deleteTask(item.id)}
               >
                 <DeleteIcon />
               </IconButton>

@@ -7,6 +7,10 @@ body {
     margin-top: 50px;
 }
 
+.App{
+    width: 450px;
+}
+
 .itemBox {
     background-color: #FFFFFF;
     padding: 8px;
@@ -27,5 +31,5 @@ body {
 .filterBtnGroup {
     display: flex;
     justify-content: flex-start;
-    margin: 10px 0px;
+    margin: 10px 10px;
 }
