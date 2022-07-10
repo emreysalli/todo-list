@@ -8,13 +8,14 @@ import PrioritySelect from "./components/PrioritySelect/PrioritySelect.jsx";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-
+import Badge from "@mui/material/Badge";
+import TaskIcon from "@mui/icons-material/Task";
 function App() {
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
   const [filteredTask, setFilteredTask] = useState([]);
   const [priority, setPriority] = useState("");
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState([false, ""]);
 
   const priorityDict = {
     Low: "green",
@@ -92,6 +93,10 @@ function App() {
     setTaskItems(filtered);
   };
 
+  const filterTask = (task) => {
+    return task.id === openDialog[1];
+  };
+
   return (
     <div className="App">
       {openDialog && (
@@ -99,6 +104,7 @@ function App() {
           open={openDialog}
           setOpen={setOpenDialog}
           priorityObj={priorityDict}
+          task={filteredTask.filter(filterTask)}
         />
       )}
 
@@ -139,11 +145,30 @@ function App() {
           </Button>
         </div>
       </Box>
-      <FilterButtonGroup filtered={filtered} clearCompleted={clearCompleted} />
-
+      <div
+        style={{
+          margin: 20,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
+        <Badge
+          color="secondary"
+          badgeContent={filteredTask.length}
+          style={{ marginRight: 10 }}
+        >
+          <TaskIcon fontSize="large" color="action" />
+        </Badge>
+        <FilterButtonGroup
+          filtered={filtered}
+          clearCompleted={clearCompleted}
+        />
+      </div>
       {filteredTask.map((item, index) => {
         return (
           <Task
+            key={index}
             item={item}
             id={index}
             priorityDict={priorityDict}

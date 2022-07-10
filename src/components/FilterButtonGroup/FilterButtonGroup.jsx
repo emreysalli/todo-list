@@ -37,7 +37,7 @@ export default function FilterButtonGroup(props) {
       <Button
         className="clearCompBtn"
         size="medium"
-        style={{ color: "black" }}
+        style={{ color: "black", marginLeft: 10 }}
         onClick={() => props.clearCompleted()}
       >
         Clear completed

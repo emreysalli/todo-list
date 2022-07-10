@@ -14,10 +14,9 @@ export default function FormDialog(props) {
   const handleClose = () => {
     props.setOpen(false);
   };
-
   return (
     <div>
-      <Dialog open={props.open}>
+      <Dialog open={props.open[0]}>
         <DialogTitle>Edit Task</DialogTitle>
         <DialogContent id="dialogContainer">
           <div>
@@ -28,6 +27,7 @@ export default function FormDialog(props) {
               id="outlined-required"
               label="Task"
               type="text"
+              value={props.task[0].text}
               variant="standard"
               margin="dense"
             />
@@ -38,7 +38,7 @@ export default function FormDialog(props) {
               id="standard-select-currency"
               select
               label="Select"
-              //value={currency}
+              value={props.task[0].taskPriority}
               //onChange={handleChange}
               helperText="Please select your priority"
               variant="standard"
@@ -56,7 +56,7 @@ export default function FormDialog(props) {
             <FormControlLabel
               id="formControlLabel"
               value="start"
-              control={<Checkbox />}
+              control={<Checkbox checked={props.task[0].isComplete} />}
               label="Completed"
               labelPlacement="start"
             />

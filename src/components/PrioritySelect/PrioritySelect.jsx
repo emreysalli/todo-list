@@ -12,6 +12,7 @@ function PrioritySelect(props) {
         label="Priority"
         helperText="Please select your priority"
       >
+        <MenuItem value="">None</MenuItem>
         {Object.keys(props.priorityDict).map(function (key, index) {
           return (
             <MenuItem value={key} key={index}>

@@ -23,7 +23,7 @@ function Task(props) {
         opacity: opacity,
       }}
       className="itemBox"
-      onClick={() => props.setOpenDialog(true)}
+      onClick={() => props.setOpenDialog([true, props.item.id])}
     >
       <div
         className="item"
