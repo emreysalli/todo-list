@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
 import uuid from "react-uuid";
 import "./App.css";
-import Task from "./components/Task.js";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CheckIcon from "@mui/icons-material/Check";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import Task from "./components/Task/Task.jsx";
+import TaskEditDialog from "./components/TaskEditDialog/TaskEditDialog.jsx";
+import FilterButtonGroup from "./components/FilterButtonGroup/FilterButtonGroup.jsx";
+import PrioritySelect from "./components/PrioritySelect/PrioritySelect.jsx";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 function App() {
-  document.title = "TODO LIST";
-
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
   const [filteredTask, setFilteredTask] = useState([]);
   const [priority, setPriority] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+
   const priorityDict = {
     Low: "green",
     Medium: "yellow",
@@ -30,17 +29,15 @@ function App() {
 
   const handleAddTask = (event) => {
     event.preventDefault();
-    if (task !== "") {
-      let taskDict = {
-        id: uuid(),
-        text: task,
-        isComplete: false,
-        taskPriority: priority,
-      };
-      setTaskItems([...taskItems, taskDict]);
-      setPriority("");
-      setTask("");
-    }
+    let taskDict = {
+      id: uuid(),
+      text: task,
+      isComplete: false,
+      taskPriority: priority,
+    };
+    setTaskItems([...taskItems, taskDict]);
+    setPriority("");
+    setTask("");
   };
 
   const completedTask = (id) => {
@@ -97,96 +94,63 @@ function App() {
 
   return (
     <div className="App">
-      <h2 className="sectionTitle">TODO LIST</h2>
-      <form onSubmit={handleAddTask}>
-        <input
-          className="input"
-          placeholder={"Write a task"}
-          value={task}
-          onChange={(event) => setTask(event.target.value)}
+      {openDialog && (
+        <TaskEditDialog
+          open={openDialog}
+          setOpen={setOpenDialog}
+          priorityObj={priorityDict}
         />
-        <button type="submit" className="addBtn">
-          +
-        </button>
-        <Select
-          labelId="demo-simple-select-filled-label"
-          id="demo-simple-select-filled"
-          value={priority}
-          onChange={handleChange}
-          label="Priority"
-        >
-          {Object.keys(priorityDict).map(function (key, index) {
-            return (
-              <MenuItem value={key} key={index}>
-                {key}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </form>
-      <ButtonGroup
-        className="filterBtnGroup"
-        size="medium"
-        variant="outlined"
-        aria-label="outlined button group"
-        exclusive="true"
+      )}
+
+      <h2 className="sectionTitle">TODO LIST</h2>
+
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { m: 1, width: "25ch" },
+        }}
+        autoComplete="off"
+        onSubmit={handleAddTask}
       >
-        <Button
-          style={{ color: "black", borderColor: "black" }}
-          className="filterBtn"
-          onClick={() => filtered(null)}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+          }}
         >
-          All
-        </Button>
-        <Button
-          style={{ color: "black", borderColor: "black" }}
-          className="filterBtn"
-          onClick={() => filtered(false)}
-        >
-          Active
-        </Button>
-        <Button
-          style={{ color: "black", borderColor: "black" }}
-          className="filterBtn"
-          onClick={() => filtered(true)}
-        >
-          Completed
-        </Button>
-      </ButtonGroup>
-      <Button
-        className="clearCompBtn"
-        size="medium"
-        style={{ color: "black" }}
-        onClick={() => clearCompleted()}
-      >
-        Clear completed
-      </Button>
+          <TextField
+            required
+            autoFocus
+            className="input"
+            id="outlined-required"
+            label="Task"
+            value={task}
+            variant="outlined"
+            helperText="Please write a task"
+            onChange={(event) => setTask(event.target.value)}
+          />
+          <PrioritySelect
+            priorityDict={priorityDict}
+            handleChange={handleChange}
+            priority={priority}
+          />
+          <Button type="submit" variant="outlined">
+            +
+          </Button>
+        </div>
+      </Box>
+      <FilterButtonGroup filtered={filtered} clearCompleted={clearCompleted} />
 
       {filteredTask.map((item, index) => {
         return (
-          <div
-            style={{
-              backgroundColor: priorityDict[item.taskPriority],
-            }}
-            className="itemBox"
-            key={index}
-          >
-            <Task text={item.text} id={index} complete={item.isComplete} />
-            <div className="buttons">
-              <IconButton
-                aria-label="delete"
-                onClick={() => completedTask(item.id)}
-              >
-                <CheckIcon />
-              </IconButton>
-              <IconButton
-                aria-label="delete"
-                onClick={() => deleteTask(item.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </div>
-          </div>
+          <Task
+            item={item}
+            id={index}
+            priorityDict={priorityDict}
+            setOpenDialog={setOpenDialog}
+            completedTask={completedTask}
+            deleteTask={deleteTask}
+          />
         );
       })}
     </div>
