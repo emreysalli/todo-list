@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import "./TaskEditDialog.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -11,6 +11,26 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
 export default function FormDialog(props) {
+  const [tempText, setTempText] = useState(props.task[0].text);
+  const [tempPriority, setTempPriority] = useState(props.task[0].taskPriority);
+  const [tempisComplete, setTempisComplete] = useState(
+    props.task[0].isComplete
+  );
+  const handleSave = () => {
+    let updateTask = {
+      id: props.task[0].id,
+      text: tempText,
+      isComplete: tempisComplete,
+      taskPriority: tempPriority,
+    };
+    let itemsCopy = [...props.taskItems];
+    let index = itemsCopy.findIndex((item) => item.id === props.task[0].id);
+    itemsCopy.splice(index, 1);
+
+    props.setTaskItems([...itemsCopy, updateTask]);
+    props.setOpen(false);
+  };
+
   const handleClose = () => {
     props.setOpen(false);
   };
@@ -27,9 +47,10 @@ export default function FormDialog(props) {
               id="outlined-required"
               label="Task"
               type="text"
-              value={props.task[0].text}
+              value={tempText}
               variant="standard"
               margin="dense"
+              onChange={(event) => setTempText(event.target.value)}
             />
           </div>
           <div>
@@ -38,8 +59,8 @@ export default function FormDialog(props) {
               id="standard-select-currency"
               select
               label="Select"
-              value={props.task[0].taskPriority}
-              //onChange={handleChange}
+              value={tempPriority}
+              onChange={(event) => setTempPriority(event.target.value)}
               helperText="Please select your priority"
               variant="standard"
               className="textField"
@@ -56,7 +77,12 @@ export default function FormDialog(props) {
             <FormControlLabel
               id="formControlLabel"
               value="start"
-              control={<Checkbox checked={props.task[0].isComplete} />}
+              control={
+                <Checkbox
+                  checked={tempisComplete}
+                  onChange={(event) => setTempisComplete(event.target.checked)}
+                />
+              }
               label="Completed"
               labelPlacement="start"
             />
@@ -64,7 +90,7 @@ export default function FormDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Save</Button>
+          <Button onClick={handleSave}>Save</Button>
         </DialogActions>
       </Dialog>
     </div>

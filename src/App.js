@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Badge from "@mui/material/Badge";
 import TaskIcon from "@mui/icons-material/Task";
+
 function App() {
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
@@ -30,13 +31,13 @@ function App() {
 
   const handleAddTask = (event) => {
     event.preventDefault();
-    let taskDict = {
+    let taskObj = {
       id: uuid(),
       text: task,
       isComplete: false,
       taskPriority: priority,
     };
-    setTaskItems([...taskItems, taskDict]);
+    setTaskItems([...taskItems, taskObj]);
     setPriority("");
     setTask("");
   };
@@ -54,7 +55,6 @@ function App() {
     let itemsCopy = [...taskItems];
     let index = itemsCopy.findIndex((item) => item.id === id);
     itemsCopy.splice(index, 1);
-
     setTaskItems(itemsCopy);
   };
 
@@ -99,17 +99,17 @@ function App() {
 
   return (
     <div className="App">
-      {openDialog && (
+      {openDialog[0] && (
         <TaskEditDialog
           open={openDialog}
           setOpen={setOpenDialog}
           priorityObj={priorityDict}
           task={filteredTask.filter(filterTask)}
+          taskItems={taskItems}
+          setTaskItems={setTaskItems}
         />
       )}
-
-      <h2 className="sectionTitle">TODO LIST</h2>
-
+      <h2 className="sectionTitle"> TODO LIST </h2>
       <Box
         component="form"
         sx={{
@@ -140,7 +140,7 @@ function App() {
             handleChange={handleChange}
             priority={priority}
           />
-          <Button type="submit" variant="outlined">
+          <Button type="submit" id="addBtn" variant="outlined">
             +
           </Button>
         </div>
@@ -165,6 +165,7 @@ function App() {
           clearCompleted={clearCompleted}
         />
       </div>
+
       {filteredTask.map((item, index) => {
         return (
           <Task

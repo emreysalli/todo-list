@@ -29,8 +29,13 @@ body {
     font-size: 16px;
 }
 
-.addBtn {
-    width: 40px;
+#addBtn {
+    width: 60px;
+    height: 60px;
+    color: #000;
+    border-color: #000;
+    margin-top: 8px;
+    /* width: 40px;
     height: 40px;
     background-color: #fff;
     border-radius: 60px;
@@ -39,12 +44,12 @@ body {
     border-color: #C0C0C0;
     border-width: 1px;
     margin: 5px;
-    font-size: 24px;
+    font-size: 24px; */
 }
 
 .itemBox {
     background-color: #FFFFFF;
-    padding: 8px;
+    padding: 8px 15px;
     border-radius: 10px;
     flex-direction: row;
     align-items: center;
@@ -52,6 +57,10 @@ body {
     margin: 20px 30px;
     color: #fff;
     display: flex;
+}
+
+.itemBox:hover {
+    box-shadow: 10px 10px 5px #aaaaaa;
 }
 
 .filterBtn:focus {

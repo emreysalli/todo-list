@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "../../App.css";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,6 +16,16 @@ function Task(props) {
     opacity = 1;
   }
 
+  const refOne = useRef(null);
+
+  const handleClickOutside = (e) => {
+    if (!refOne.current.contains(e.target)) {
+      props.setOpenDialog([true, props.item.id]);
+    } else {
+      return true;
+    }
+  };
+
   return (
     <div
       style={{
@@ -23,7 +33,7 @@ function Task(props) {
         opacity: opacity,
       }}
       className="itemBox"
-      onClick={() => props.setOpenDialog([true, props.item.id])}
+      onClick={(e) => handleClickOutside(e)}
     >
       <div
         className="item"
@@ -45,7 +55,7 @@ function Task(props) {
           {props.id + 1} - {props.item.text}{" "}
         </span>{" "}
       </div>
-      <div className="buttons">
+      <div className="buttons" ref={refOne}>
         <IconButton
           aria-label="delete"
           onClick={() => props.completedTask(props.item.id)}
