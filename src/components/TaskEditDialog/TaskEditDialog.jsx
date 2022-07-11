@@ -16,24 +16,27 @@ export default function FormDialog(props) {
   const [tempisComplete, setTempisComplete] = useState(
     props.task[0].isComplete
   );
-  const handleSave = () => {
-    let updateTask = {
-      id: props.task[0].id,
-      text: tempText,
-      isComplete: tempisComplete,
-      taskPriority: tempPriority,
-    };
-    let itemsCopy = [...props.taskItems];
-    let index = itemsCopy.findIndex((item) => item.id === props.task[0].id);
-    itemsCopy.splice(index, 1);
 
-    props.setTaskItems([...itemsCopy, updateTask]);
+  const handleSave = () => {
+    props.setTaskItems(
+      props.taskItems.map((item) =>
+        item.id === props.task[0].id
+          ? {
+              ...item,
+              text: tempText,
+              isComplete: tempisComplete,
+              taskPriority: tempPriority,
+            }
+          : item
+      )
+    );
     props.setOpen(false);
   };
 
   const handleClose = () => {
     props.setOpen(false);
   };
+
   return (
     <div>
       <Dialog open={props.open[0]}>

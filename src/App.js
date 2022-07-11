@@ -18,7 +18,7 @@ function App() {
   const [priority, setPriority] = useState("");
   const [openDialog, setOpenDialog] = useState([false, ""]);
 
-  const priorityDict = {
+  const priorityObj = {
     Low: "green",
     Medium: "yellow",
     High: "orange",
@@ -103,7 +103,7 @@ function App() {
         <TaskEditDialog
           open={openDialog}
           setOpen={setOpenDialog}
-          priorityObj={priorityDict}
+          priorityObj={priorityObj}
           task={filteredTask.filter(filterTask)}
           taskItems={taskItems}
           setTaskItems={setTaskItems}
@@ -127,7 +127,6 @@ function App() {
           <TextField
             required
             autoFocus
-            className="input"
             id="outlined-required"
             label="Task"
             value={task}
@@ -136,7 +135,7 @@ function App() {
             onChange={(event) => setTask(event.target.value)}
           />
           <PrioritySelect
-            priorityDict={priorityDict}
+            priorityObj={priorityObj}
             handleChange={handleChange}
             priority={priority}
           />
@@ -171,8 +170,8 @@ function App() {
           <Task
             key={index}
             item={item}
-            id={index}
-            priorityDict={priorityDict}
+            index={index}
+            priorityObj={priorityObj}
             setOpenDialog={setOpenDialog}
             completedTask={completedTask}
             deleteTask={deleteTask}

@@ -1,12 +1,11 @@
 import React, { useRef } from "react";
-import "../../App.css";
+import "./Task.css";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 
 function Task(props) {
-  let textDecoration;
-  let opacity;
+  let textDecoration, opacity;
 
   if (props.item.isComplete) {
     textDecoration = "line-through";
@@ -29,33 +28,22 @@ function Task(props) {
   return (
     <div
       style={{
-        backgroundColor: props.priorityDict[props.item.taskPriority],
+        backgroundColor: props.priorityObj[props.item.taskPriority],
         opacity: opacity,
       }}
       className="itemBox"
       onClick={(e) => handleClickOutside(e)}
     >
-      <div
-        className="item"
+      <span
+        className="itemText"
         style={{
-          display: "inline-block",
-          marginRight: "5px",
+          textDecoration: textDecoration,
         }}
       >
-        <span
-          className="itemText"
-          id={props.id}
-          style={{
-            fontSize: "24px",
-            color: "#000",
-            marginLeft: "5px",
-            textDecoration: textDecoration,
-          }}
-        >
-          {props.id + 1} - {props.item.text}{" "}
-        </span>{" "}
-      </div>
-      <div className="buttons" ref={refOne}>
+        {props.index + 1} - {props.item.text}
+      </span>
+
+      <div ref={refOne}>
         <IconButton
           aria-label="delete"
           onClick={() => props.completedTask(props.item.id)}

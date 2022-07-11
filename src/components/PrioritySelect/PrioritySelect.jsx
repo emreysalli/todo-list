@@ -13,7 +13,7 @@ function PrioritySelect(props) {
         helperText="Please select your priority"
       >
         <MenuItem value="">None</MenuItem>
-        {Object.keys(props.priorityDict).map(function (key, index) {
+        {Object.keys(props.priorityObj).map(function (key, index) {
           return (
             <MenuItem value={key} key={index}>
               {key}
@@ -25,4 +25,4 @@ function PrioritySelect(props) {
   );
 }
 
-export default PrioritySelect;
+export default React.memo(PrioritySelect);

@@ -1,8 +1,9 @@
 import React from "react";
+import "./FilterButtonGroup.css";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 
-export default function FilterButtonGroup(props) {
+function FilterButtonGroup(props) {
   return (
     <div>
       <ButtonGroup
@@ -45,3 +46,5 @@ export default function FilterButtonGroup(props) {
     </div>
   );
 }
+
+export default React.memo(FilterButtonGroup);

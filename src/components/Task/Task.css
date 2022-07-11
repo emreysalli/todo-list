@@ -1,0 +1,21 @@
+.itemBox {
+    background-color: #FFFFFF;
+    padding: 8px 15px;
+    border-radius: 10px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 30px;
+    color: #fff;
+    display: flex;
+}
+
+.itemBox:hover {
+    box-shadow: 10px 10px 5px #aaaaaa;
+}
+
+.itemText {
+    font-size: 24px;
+    color: #000;
+    margin-left: 5px;
+}
