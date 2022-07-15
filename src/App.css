@@ -10,7 +10,9 @@ body {
 
 .App {
     width: 545px;
+    height: 700px;
     padding: 0px 100px;
+    position: relative;
 }
 
 .sectionTitle {
@@ -24,4 +26,13 @@ body {
     color: #000;
     border-color: #000;
     margin-top: 8px;
+}
+
+#pagination {
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

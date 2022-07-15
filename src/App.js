@@ -10,13 +10,23 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Badge from "@mui/material/Badge";
 import TaskIcon from "@mui/icons-material/Task";
-
+import Pagination from "@mui/material/Pagination";
+import usePagination from "./Pagination";
 function App() {
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
   const [filteredTask, setFilteredTask] = useState([]);
   const [priority, setPriority] = useState("");
   const [openDialog, setOpenDialog] = useState([false, ""]);
+  const [page, setPage] = useState(1);
+  const perPage = 5;
+
+  const count = Math.ceil(filteredTask.length / perPage);
+  const _data = usePagination(filteredTask, perPage);
+  const handleChangePage = (e, p) => {
+    setPage(p);
+    _data.jump(p);
+  };
 
   const priorityObj = {
     Low: "green",
@@ -165,12 +175,12 @@ function App() {
         />
       </div>
 
-      {filteredTask.map((item, index) => {
+      {_data.currentData().map((item, index) => {
         return (
           <Task
             key={index}
             item={item}
-            index={index}
+            index={(_data.currentPage - 1) * 5 + index}
             priorityObj={priorityObj}
             setOpenDialog={setOpenDialog}
             completedTask={completedTask}
@@ -178,6 +188,15 @@ function App() {
           />
         );
       })}
+      <Pagination
+        id="pagination"
+        count={count}
+        size="large"
+        page={page}
+        variant="outlined"
+        shape="rounded"
+        onChange={handleChangePage}
+      />
     </div>
   );
 }
