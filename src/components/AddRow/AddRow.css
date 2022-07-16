@@ -1,0 +1,14 @@
+#addBox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+#addBtn {
+    width: 60px;
+    height: 60px;
+    color: #000;
+    border-color: #000;
+    margin-top: 8px;
+}

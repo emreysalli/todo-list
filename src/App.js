@@ -3,15 +3,13 @@ import uuid from "react-uuid";
 import "./App.css";
 import Task from "./components/Task/Task.jsx";
 import TaskEditDialog from "./components/TaskEditDialog/TaskEditDialog.jsx";
-import FilterButtonGroup from "./components/FilterButtonGroup/FilterButtonGroup.jsx";
-import PrioritySelect from "./components/PrioritySelect/PrioritySelect.jsx";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Badge from "@mui/material/Badge";
-import TaskIcon from "@mui/icons-material/Task";
-import Pagination from "@mui/material/Pagination";
+import AppBar from "./components/AppBar/AppBar.jsx";
+import AddRow from "./components/AddRow/AddRow.jsx";
+import FilterRow from "./components/FilterRow/FilterRow.jsx";
 import usePagination from "./Pagination";
+import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
+
 function App() {
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
@@ -108,7 +106,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div>
       {openDialog[0] && (
         <TaskEditDialog
           open={openDialog}
@@ -119,75 +117,35 @@ function App() {
           setTaskItems={setTaskItems}
         />
       )}
-      <h2 className="sectionTitle"> TODO LIST </h2>
-      <Box
-        component="form"
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "25ch" },
-        }}
-        autoComplete="off"
-        onSubmit={handleAddTask}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-          }}
-        >
-          <TextField
-            required
-            autoFocus
-            id="outlined-required"
-            label="Task"
-            value={task}
-            variant="outlined"
-            helperText="Please write a task"
-            onChange={(event) => setTask(event.target.value)}
-          />
-          <PrioritySelect
-            priorityObj={priorityObj}
-            handleChange={handleChange}
-            priority={priority}
-          />
-          <Button type="submit" id="addBtn" variant="outlined">
-            +
-          </Button>
-        </div>
+      <AppBar />
+      <AddRow
+        task={task}
+        setTask={setTask}
+        priorityObj={priorityObj}
+        handleChange={handleChange}
+        handleAddTask={handleAddTask}
+        priority={priority}
+      />
+      <FilterRow
+        taskCount={filteredTask.length}
+        filtered={filtered}
+        clearCompleted={clearCompleted}
+      />
+      <Box id="taskBox">
+        {_data.currentData().map((item, index) => {
+          return (
+            <Task
+              key={index}
+              item={item}
+              index={(_data.currentPage - 1) * perPage + index}
+              priorityObj={priorityObj}
+              setOpenDialog={setOpenDialog}
+              completedTask={completedTask}
+              deleteTask={deleteTask}
+            />
+          );
+        })}
       </Box>
-      <div
-        style={{
-          margin: 20,
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        <Badge
-          color="secondary"
-          badgeContent={filteredTask.length}
-          style={{ marginRight: 10 }}
-        >
-          <TaskIcon fontSize="large" color="action" />
-        </Badge>
-        <FilterButtonGroup
-          filtered={filtered}
-          clearCompleted={clearCompleted}
-        />
-      </div>
-
-      {_data.currentData().map((item, index) => {
-        return (
-          <Task
-            key={index}
-            item={item}
-            index={(_data.currentPage - 1) * 5 + index}
-            priorityObj={priorityObj}
-            setOpenDialog={setOpenDialog}
-            completedTask={completedTask}
-            deleteTask={deleteTask}
-          />
-        );
-      })}
       <Pagination
         id="pagination"
         count={count}
