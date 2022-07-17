@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import PrioritySelect from "../PrioritySelect/PrioritySelect.jsx";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function AddRow(props) {
   return (
@@ -31,9 +32,11 @@ export default function AddRow(props) {
         handleChange={props.handleChange}
         priority={props.priority}
       />
-      <Button type="submit" id="addBtn" variant="outlined">
-        +
-      </Button>
+      <Tooltip title="Add Task">
+        <Button type="submit" id="addBtn" variant="outlined">
+          +
+        </Button>
+      </Tooltip>
     </Box>
   );
 }

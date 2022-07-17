@@ -9,6 +9,7 @@ import FilterRow from "./components/FilterRow/FilterRow.jsx";
 import usePagination from "./Pagination";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
+import { useSnackbar } from "notistack";
 
 function App() {
   const [task, setTask] = useState("");
@@ -18,13 +19,9 @@ function App() {
   const [openDialog, setOpenDialog] = useState([false, ""]);
   const [page, setPage] = useState(1);
   const perPage = 5;
+  const { enqueueSnackbar } = useSnackbar();
 
-  const count = Math.ceil(filteredTask.length / perPage);
-  const _data = usePagination(filteredTask, perPage);
-  const handleChangePage = (e, p) => {
-    setPage(p);
-    _data.jump(p);
-  };
+  const [query, setQuery] = useState("");
 
   const priorityObj = {
     Low: "green",
@@ -48,6 +45,9 @@ function App() {
     setTaskItems([...taskItems, taskObj]);
     setPriority("");
     setTask("");
+    enqueueSnackbar("Task added.", {
+      variant: "success",
+    });
   };
 
   const completedTask = (id) => {
@@ -64,6 +64,10 @@ function App() {
     let index = itemsCopy.findIndex((item) => item.id === id);
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
+
+    enqueueSnackbar("Task deleted.", {
+      variant: "success",
+    });
   };
 
   const filtered = (complete) => {
@@ -105,6 +109,23 @@ function App() {
     return task.id === openDialog[1];
   };
 
+  const search = (items) => {
+    return items.filter((item) => {
+      if (query === "") {
+        return item;
+      } else {
+        return item.text.toLowerCase().includes(query);
+      }
+    });
+  };
+
+  const count = Math.ceil(search(filteredTask).length / perPage);
+  const _data = usePagination(search(filteredTask), perPage);
+  const handleChangePage = (e, p) => {
+    setPage(p);
+    _data.jump(p);
+  };
+
   return (
     <div>
       {openDialog[0] && (
@@ -115,9 +136,10 @@ function App() {
           task={filteredTask.filter(filterTask)}
           taskItems={taskItems}
           setTaskItems={setTaskItems}
+          enqueueSnackbar={enqueueSnackbar}
         />
       )}
-      <AppBar />
+      <AppBar setQuery={setQuery} />
       <AddRow
         task={task}
         setTask={setTask}

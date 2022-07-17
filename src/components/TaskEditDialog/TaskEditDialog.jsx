@@ -30,6 +30,9 @@ export default function FormDialog(props) {
           : item
       )
     );
+    props.enqueueSnackbar("Task updated.", {
+      variant: "success",
+    });
     props.setOpen(false);
   };
 

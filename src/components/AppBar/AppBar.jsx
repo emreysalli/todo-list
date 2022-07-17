@@ -57,7 +57,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = (props) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -98,6 +98,7 @@ const ResponsiveAppBar = () => {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onChange={(event) => props.setQuery(event.target.value)}
               />
             </Search>
           </Box>

@@ -3,6 +3,7 @@ import "./Task.css";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
+import Tooltip from "@mui/material/Tooltip";
 
 function Task(props) {
   let textDecoration, opacity;
@@ -44,18 +45,22 @@ function Task(props) {
       </span>
 
       <div ref={refOne}>
-        <IconButton
-          aria-label="delete"
-          onClick={() => props.completedTask(props.item.id)}
-        >
-          <CheckIcon />
-        </IconButton>
-        <IconButton
-          aria-label="delete"
-          onClick={() => props.deleteTask(props.item.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip title="Complete">
+          <IconButton
+            aria-label="delete"
+            onClick={() => props.completedTask(props.item.id)}
+          >
+            <CheckIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton
+            aria-label="delete"
+            onClick={() => props.deleteTask(props.item.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       </div>
     </div>
   );
