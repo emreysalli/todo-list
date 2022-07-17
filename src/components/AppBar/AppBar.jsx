@@ -88,7 +88,7 @@ const ResponsiveAppBar = (props) => {
               textDecoration: "none",
             }}
           >
-            TODO LIST
+            TO DO LIST
           </Typography>
           <Box sx={{ flexGrow: 1, display: "flex" }}>
             <Search>
