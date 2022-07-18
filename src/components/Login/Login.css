@@ -1,0 +1,19 @@
+#loginBox {
+    display: block;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#loginBox div {
+    margin-bottom: 5px;
+}
+
+#loginHeader {
+    margin-bottom: 15px;
+}
+
+#needanAccount {
+    width: 40ch;
+    margin: 20px auto;
+    text-align: start;
+}

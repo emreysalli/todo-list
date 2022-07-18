@@ -7,29 +7,3 @@ body {
     background-color: #EBEAE6;
     font-family: 'Open Sans', sans-serif;
 }
-
-#taskBox {
-    display: block;
-    margin: 30px auto;
-    width: 40%;
-    height: 350px;
-}
-
-@media only screen and (max-width: 800px) {
-    #taskBox {
-        width: 80%;
-    }
-}
-
-@media only screen and (max-width: 1000px) {
-    #taskBox {
-        width: 60%;
-    }
-}
-
-#pagination {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 30px;
-}

@@ -1,0 +1,19 @@
+#registerBox {
+    display: block;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#registerBox div {
+    margin-bottom: 5px;
+}
+
+#registerHeader {
+    margin-bottom: 15px;
+}
+
+#alreadyRegistered {
+    width: 40ch;
+    margin: 20px auto;
+    text-align: start;
+}

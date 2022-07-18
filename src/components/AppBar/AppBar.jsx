@@ -11,11 +11,11 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { styled, alpha } from "@mui/material/styles";
-
+import { Link } from "react-router-dom";
 import InputBase from "@mui/material/InputBase";
 
 import SearchIcon from "@mui/icons-material/Search";
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -124,11 +124,18 @@ const ResponsiveAppBar = (props) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem key={"profile"} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem key={"register"}>
+                <Link to="/register">Register</Link>
+              </MenuItem>
+              <MenuItem key={"login"}>
+                <Link to="/login">Login</Link>
+              </MenuItem>
+              <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
