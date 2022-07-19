@@ -4,7 +4,7 @@ import AppBar from "./components/AppBar/AppBar.jsx";
 import Register from "./components/Register/Register.jsx";
 import Login from "./components/Login/Login.jsx";
 import MainWindow from "./components/MainWindow/MainWindow.jsx";
-
+import Footer from "./components/Footer/Footer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainWindow query={query} />} />
         </Routes>
+          <Footer/>
       </Router>
     </div>
   );

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,8 +13,10 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { styled, alpha } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import InputBase from "@mui/material/InputBase";
-
 import SearchIcon from "@mui/icons-material/Search";
+import {auth} from "../../firebase-config.js";
+import {signOut,onAuthStateChanged} from "firebase/auth";
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -68,6 +70,14 @@ const ResponsiveAppBar = (props) => {
     setAnchorElUser(null);
   };
 
+  // const [user,setUser]=useState({});
+  // onAuthStateChanged(auth,(currentUser)=>{
+  //   setUser(currentUser);
+  // })
+  // const logout=async()=>{
+  //   await signOut(auth); 
+  // }
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -102,10 +112,12 @@ const ResponsiveAppBar = (props) => {
               />
             </Search>
           </Box>
+         
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Emre" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -134,7 +146,7 @@ const ResponsiveAppBar = (props) => {
                 <Link to="/login">Login</Link>
               </MenuItem>
               <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Logout</Typography>
+              <Typography textAlign="center">Logout</Typography>
               </MenuItem>
             </Menu>
           </Box>

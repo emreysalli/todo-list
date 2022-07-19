@@ -10,8 +10,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Register.css";
 import { Link } from "react-router-dom";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../../firebase-config";
+import {useNavigate} from "react-router-dom";
 
 export default function Register() {
+  let navigate=useNavigate();
   const [values, setValues] = React.useState({
     name: "",
     surname: "",
@@ -47,10 +51,17 @@ export default function Register() {
   const handleMouseDownConfirmPassword = (event) => {
     event.preventDefault();
   };
+  const signup = async () => {
+    if (values.password  === values.confirmPassword) {
+      try{
+        const user = await createUserWithEmailAndPassword(auth,values.email,values.password);
+        navigate("/Login");
+        console.log("kayit basarili.");
+        console.log(user);
 
-  const signup = () => {
-    if (values.password === values.confirmPassword) {
-      console.log("kayit basarili.");
+      }catch(error){
+        console.log(error.message);
+      }
     } else {
       console.log("kayit basarisiz.");
     }

@@ -1,0 +1,16 @@
+.footer-container{
+    padding: 20px 0px;
+    text-align: center;
+    margin-top: 50px;
+    left:0;
+    width: 100%;
+    color:#fff;
+    background-color: #282d32;
+}
+
+.footer-container p{
+    font-size: 13px;
+    color:#aaa;
+    margin-top: 15px;
+    margin-bottom: 0px;
+}

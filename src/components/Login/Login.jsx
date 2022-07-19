@@ -10,6 +10,9 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Login.css";
 import { Link } from "react-router-dom";
+import {auth} from "../../firebase-config.js";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {useNavigate} from "react-router-dom";
 
 export default function LogIn() {
   const [values, setValues] = React.useState({
@@ -17,6 +20,8 @@ export default function LogIn() {
     password: "",
     showPassword: false,
   });
+
+  const navigate=useNavigate();
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -32,6 +37,18 @@ export default function LogIn() {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const signin=async()=>{
+    try{
+      const user=await signInWithEmailAndPassword(auth,values.email,values.password);
+      console.log(user);
+      alert("giris basarili");
+      navigate("/");
+    }catch(error){
+      console.log(error.message);
+      alert("giris basarisiz");
+    }
+  }
 
   return (
     <Box id="loginBox">
@@ -80,7 +97,7 @@ export default function LogIn() {
       </div>
 
       <div>
-        <Button variant="outlined" size="large">
+        <Button variant="outlined" size="large" onClick={signin}>
           Sign In
         </Button>
       </div>
