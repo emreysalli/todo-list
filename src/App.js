@@ -19,7 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainWindow query={query} />} />
         </Routes>
-          <Footer/>
+        <Footer />
       </Router>
     </div>
   );

@@ -1,16 +1,17 @@
-.footer-container{
-    padding: 20px 0px;
+.footer-container {
+    display: flex;
+    flex-direction: column;
     text-align: center;
+    justify-content: center;
+    align-items: center;
     margin-top: 50px;
-    left:0;
+    height: 100px;
     width: 100%;
-    color:#fff;
+    color: #fff;
     background-color: #282d32;
 }
 
-.footer-container p{
+.footer-container p {
     font-size: 13px;
-    color:#aaa;
-    margin-top: 15px;
-    margin-bottom: 0px;
+    color: #aaa;
 }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,9 +14,8 @@ import { styled, alpha } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import {auth} from "../../firebase-config.js";
-import {signOut,onAuthStateChanged} from "firebase/auth";
-
+import { auth } from "../../firebase-config";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -70,13 +69,17 @@ const ResponsiveAppBar = (props) => {
     setAnchorElUser(null);
   };
 
-  // const [user,setUser]=useState({});
-  // onAuthStateChanged(auth,(currentUser)=>{
-  //   setUser(currentUser);
-  // })
-  // const logout=async()=>{
-  //   await signOut(auth); 
-  // }
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+  });
+
+  const logout = async () => {
+    await signOut(auth);
+    alert("cikis basarili.");
+  };
 
   return (
     <AppBar position="static">
@@ -112,8 +115,7 @@ const ResponsiveAppBar = (props) => {
               />
             </Search>
           </Box>
-         
-
+          <Box sx={{ marginRight: 5 }}>{user?.email}</Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -139,14 +141,24 @@ const ResponsiveAppBar = (props) => {
               <MenuItem key={"profile"} onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">Profile</Typography>
               </MenuItem>
-              <MenuItem key={"register"}>
+              <MenuItem
+                key={"register"}
+                style={{ display: user ? "none" : "block" }}
+              >
                 <Link to="/register">Register</Link>
               </MenuItem>
-              <MenuItem key={"login"}>
+              <MenuItem
+                key={"login"}
+                style={{ display: user ? "none" : "block" }}
+              >
                 <Link to="/login">Login</Link>
               </MenuItem>
-              <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">Logout</Typography>
+              <MenuItem
+                key={"logout"}
+                style={{ display: user ? "block" : "none" }}
+                onClick={logout}
+              >
+                <Typography textAlign="center">Logout</Typography>
               </MenuItem>
             </Menu>
           </Box>

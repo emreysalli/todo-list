@@ -10,12 +10,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Register.css";
 import { Link } from "react-router-dom";
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../../firebase-config";
-import {useNavigate} from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase-config";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  let navigate=useNavigate();
+  let navigate = useNavigate();
   const [values, setValues] = React.useState({
     name: "",
     surname: "",
@@ -52,18 +52,31 @@ export default function Register() {
     event.preventDefault();
   };
   const signup = async () => {
-    if (values.password  === values.confirmPassword) {
-      try{
-        const user = await createUserWithEmailAndPassword(auth,values.email,values.password);
-        navigate("/Login");
-        console.log("kayit basarili.");
-        console.log(user);
-
-      }catch(error){
-        console.log(error.message);
+    if (values.password !== "" && values.confirmPassword !== "") {
+      if (values.password === values.confirmPassword) {
+        try {
+          await createUserWithEmailAndPassword(
+            auth,
+            values.email,
+            values.password
+          );
+          navigate("/");
+          alert("kayit basarili.");
+          setValues({
+            name: "",
+            surname: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            showPassword: false,
+            showConfirmPassword: false,
+          });
+        } catch (error) {
+          alert(error.message);
+        }
       }
     } else {
-      console.log("kayit basarisiz.");
+      alert("kayit basarisiz.");
     }
   };
   return (
@@ -180,7 +193,7 @@ export default function Register() {
       </div>
       <div id="alreadyRegistered">
         <p>
-          Already registered? <Link to="/login">Sign In</Link>
+          Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </div>
     </Box>
