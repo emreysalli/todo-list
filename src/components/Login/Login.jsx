@@ -9,10 +9,10 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 export default function LogIn() {
   const [values, setValues] = React.useState({
@@ -22,6 +22,7 @@ export default function LogIn() {
   });
 
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -40,17 +41,16 @@ export default function LogIn() {
 
   const signin = async () => {
     try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-      console.log(user);
-      alert("giris basarili");
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      enqueueSnackbar("Login successful.", {
+        variant: "success",
+      });
       navigate("/");
     } catch (error) {
       console.log(error.message);
-      alert("giris basarisiz");
+      enqueueSnackbar("Login failed.", {
+        variant: "error",
+      });
     }
   };
 

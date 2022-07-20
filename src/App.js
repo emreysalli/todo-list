@@ -9,16 +9,28 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   const [query, setQuery] = useState("");
+  const [taskItems, setTaskItems] = useState([]);
 
   return (
     <div>
       <Router>
         <AppBar setQuery={setQuery} />
+
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<MainWindow query={query} />} />
+          <Route
+            path="/"
+            element={
+              <MainWindow
+                query={query}
+                taskItems={taskItems}
+                setTaskItems={setTaskItems}
+              />
+            }
+          />
         </Routes>
+
         <Footer />
       </Router>
     </div>

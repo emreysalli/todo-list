@@ -12,7 +12,6 @@ import { useSnackbar } from "notistack";
 
 function MainWindow(props) {
   const [task, setTask] = useState("");
-  const [taskItems, setTaskItems] = useState([]);
   const [filteredTask, setFilteredTask] = useState([]);
   const [priority, setPriority] = useState("");
   const [openDialog, setOpenDialog] = useState([false, ""]);
@@ -39,7 +38,7 @@ function MainWindow(props) {
       isComplete: false,
       taskPriority: priority,
     };
-    setTaskItems([...taskItems, taskObj]);
+    props.setTaskItems([...props.taskItems, taskObj]);
     setPriority("");
     setTask("");
     enqueueSnackbar("Task added.", {
@@ -48,19 +47,19 @@ function MainWindow(props) {
   };
 
   const completedTask = (id) => {
-    let itemsCopy = [...taskItems];
+    let itemsCopy = [...props.taskItems];
     let index = itemsCopy.findIndex((item) => item.id === id);
 
     itemsCopy[index].isComplete = !itemsCopy[index].isComplete;
 
-    setTaskItems(itemsCopy);
+    props.setTaskItems(itemsCopy);
   };
 
   const deleteTask = (id) => {
-    let itemsCopy = [...taskItems];
+    let itemsCopy = [...props.taskItems];
     let index = itemsCopy.findIndex((item) => item.id === id);
     itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
+    props.setTaskItems(itemsCopy);
 
     enqueueSnackbar("Task deleted.", {
       variant: "success",
@@ -69,11 +68,11 @@ function MainWindow(props) {
 
   const filtered = (complete) => {
     if (complete === null) {
-      setFilteredTask(taskItems);
+      setFilteredTask(props.taskItems);
       return;
     }
 
-    let filtered = taskItems.filter((item) => {
+    let filtered = props.taskItems.filter((item) => {
       return item.isComplete === complete;
     });
 
@@ -81,7 +80,7 @@ function MainWindow(props) {
   };
 
   useEffect(() => {
-    let filtered = taskItems.filter((item) => {
+    let filtered = props.taskItems.filter((item) => {
       return item.isComplete === true;
     });
 
@@ -91,15 +90,15 @@ function MainWindow(props) {
       document.querySelector(".clearCompBtn").style.display = "inline-block";
     }
 
-    setFilteredTask(taskItems);
-  }, [taskItems]);
+    setFilteredTask(props.taskItems);
+  }, [props.taskItems]);
 
   const clearCompleted = () => {
-    let filtered = taskItems.filter((item) => {
+    let filtered = props.taskItems.filter((item) => {
       return item.isComplete === false;
     });
 
-    setTaskItems(filtered);
+    props.setTaskItems(filtered);
   };
 
   const filterTask = (task) => {
@@ -130,8 +129,8 @@ function MainWindow(props) {
           setOpen={setOpenDialog}
           priorityObj={priorityObj}
           task={filteredTask.filter(filterTask)}
-          taskItems={taskItems}
-          setTaskItems={setTaskItems}
+          taskItems={props.taskItems}
+          setTaskItems={props.setTaskItems}
           enqueueSnackbar={enqueueSnackbar}
         />
       )}
@@ -164,6 +163,7 @@ function MainWindow(props) {
         })}
       </Box>
       <Pagination
+        sx={{ visibility: props.taskItems.length === 0 ? "hidden" : "visible" }}
         id="pagination"
         count={count}
         size="large"

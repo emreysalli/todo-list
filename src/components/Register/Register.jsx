@@ -9,13 +9,12 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase-config";
-import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 export default function Register() {
-  let navigate = useNavigate();
   const [values, setValues] = React.useState({
     name: "",
     surname: "",
@@ -25,6 +24,8 @@ export default function Register() {
     showPassword: false,
     showConfirmPassword: false,
   });
+  let navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -61,7 +62,9 @@ export default function Register() {
             values.password
           );
           navigate("/");
-          alert("kayit basarili.");
+          enqueueSnackbar("Registration successful.", {
+            variant: "success",
+          });
           setValues({
             name: "",
             surname: "",
@@ -72,11 +75,16 @@ export default function Register() {
             showConfirmPassword: false,
           });
         } catch (error) {
-          alert(error.message);
+          console.log(error.message);
+          enqueueSnackbar("Registration failed.", {
+            variant: "error",
+          });
         }
       }
     } else {
-      alert("kayit basarisiz.");
+      enqueueSnackbar("Registration failed.", {
+        variant: "error",
+      });
     }
   };
   return (
