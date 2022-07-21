@@ -9,6 +9,7 @@ import usePagination from "../../Pagination";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import { useSnackbar } from "notistack";
+import { auth, db } from "../../firebase-config";
 
 function MainWindow(props) {
   const [task, setTask] = useState("");

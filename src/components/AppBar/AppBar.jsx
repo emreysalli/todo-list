@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./AppBar.css";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -16,6 +17,7 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { auth } from "../../firebase-config";
 import { signOut, onAuthStateChanged } from "firebase/auth";
+import { useSnackbar } from "notistack";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -59,6 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 const ResponsiveAppBar = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -78,7 +81,10 @@ const ResponsiveAppBar = (props) => {
 
   const logout = async () => {
     await signOut(auth);
-    alert("cikis basarili.");
+    enqueueSnackbar("Exit successful.", {
+      variant: "success",
+    });
+    props.setTaskItems([]);
   };
 
   return (
@@ -137,27 +143,41 @@ const ResponsiveAppBar = (props) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key={"profile"} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Profile</Typography>
+              <MenuItem
+                key={"profile"}
+                style={{ display: user ? "block" : "none" }}
+                onClick={handleCloseUserMenu}
+              >
+                <Typography textAlign="center">
+                  <Link className="link" to="/profile">
+                    Profile
+                  </Link>
+                </Typography>
               </MenuItem>
               <MenuItem
                 key={"register"}
                 style={{ display: user ? "none" : "block" }}
               >
-                <Link to="/register">Register</Link>
+                <Link className="link" to="/register">
+                  Register
+                </Link>
               </MenuItem>
               <MenuItem
                 key={"login"}
                 style={{ display: user ? "none" : "block" }}
               >
-                <Link to="/login">Login</Link>
+                <Link className="link" to="/login">
+                  Login
+                </Link>
               </MenuItem>
               <MenuItem
                 key={"logout"}
                 style={{ display: user ? "block" : "none" }}
                 onClick={logout}
               >
-                <Typography textAlign="center">Logout</Typography>
+                <Typography className="link" textAlign="center">
+                  Logout
+                </Typography>
               </MenuItem>
             </Menu>
           </Box>

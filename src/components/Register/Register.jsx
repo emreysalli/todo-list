@@ -11,11 +11,15 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase-config";
+import { auth, db } from "../../firebase-config";
+import { doc, setDoc } from "firebase/firestore";
 import { useSnackbar } from "notistack";
 
 export default function Register() {
-  const [values, setValues] = React.useState({
+  const { enqueueSnackbar } = useSnackbar();
+  let navigate = useNavigate();
+
+  const initialValues = {
     name: "",
     surname: "",
     email: "",
@@ -23,9 +27,8 @@ export default function Register() {
     confirmPassword: "",
     showPassword: false,
     showConfirmPassword: false,
-  });
-  let navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  };
+  const [values, setValues] = React.useState(initialValues);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -52,34 +55,34 @@ export default function Register() {
   const handleMouseDownConfirmPassword = (event) => {
     event.preventDefault();
   };
+
   const signup = async () => {
     if (values.password !== "" && values.confirmPassword !== "") {
       if (values.password === values.confirmPassword) {
-        try {
-          await createUserWithEmailAndPassword(
-            auth,
-            values.email,
-            values.password
-          );
-          navigate("/");
-          enqueueSnackbar("Registration successful.", {
-            variant: "success",
+        await createUserWithEmailAndPassword(
+          auth,
+          values.email,
+          values.password
+        )
+          .then(async (userCredential) => {
+            const user = userCredential.user;
+            const userRef = doc(db, "usersandtasks", user.uid);
+            await setDoc(
+              userRef,
+              { name: values.name, surname: values.surname, tasks: [] },
+              { merge: true }
+            );
+            navigate("/");
+            enqueueSnackbar("Registration successful.", {
+              variant: "success",
+            });
+            setValues(initialValues);
+          })
+          .catch((error) => {
+            enqueueSnackbar(error.message, {
+              variant: "error",
+            });
           });
-          setValues({
-            name: "",
-            surname: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            showPassword: false,
-            showConfirmPassword: false,
-          });
-        } catch (error) {
-          console.log(error.message);
-          enqueueSnackbar("Registration failed.", {
-            variant: "error",
-          });
-        }
       }
     } else {
       enqueueSnackbar("Registration failed.", {
@@ -87,6 +90,7 @@ export default function Register() {
       });
     }
   };
+
   return (
     <Box id="registerBox">
       <div>

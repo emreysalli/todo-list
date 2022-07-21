@@ -10,19 +10,21 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../../firebase-config.js";
+import { auth, db } from "../../firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useSnackbar } from "notistack";
+import { doc, getDoc } from "firebase/firestore";
 
-export default function LogIn() {
-  const [values, setValues] = React.useState({
+export default function LogIn(props) {
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const initialState = {
     email: "",
     password: "",
     showPassword: false,
-  });
-
-  const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
+  };
+  const [values, setValues] = React.useState(initialState);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -40,18 +42,23 @@ export default function LogIn() {
   };
 
   const signin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      enqueueSnackbar("Login successful.", {
-        variant: "success",
+    await signInWithEmailAndPassword(auth, values.email, values.password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        const docRef = doc(db, "usersandtasks", user.uid);
+        const docSnap = await getDoc(docRef);
+        props.setTaskItems(docSnap.data()["tasks"]);
+        navigate("/");
+        enqueueSnackbar("Login successful.", {
+          variant: "success",
+        });
+        setValues(initialState);
+      })
+      .catch((error) => {
+        enqueueSnackbar(error.message, {
+          variant: "error",
+        });
       });
-      navigate("/");
-    } catch (error) {
-      console.log(error.message);
-      enqueueSnackbar("Login failed.", {
-        variant: "error",
-      });
-    }
   };
 
   return (
