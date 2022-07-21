@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import AppBar from "./components/AppBar/AppBar.jsx";
 import Profile from "./components/Profile/Profile.jsx";
@@ -7,10 +7,24 @@ import Login from "./components/Login/Login.jsx";
 import MainWindow from "./components/MainWindow/MainWindow.jsx";
 import Footer from "./components/Footer/Footer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { db, auth } from "./firebase-config.js";
+import { doc, setDoc } from "firebase/firestore";
 
 function App() {
   const [query, setQuery] = useState("");
   const [taskItems, setTaskItems] = useState([]);
+
+  useEffect(() => {
+    const setUser = async () => {
+      const userUid = auth.currentUser?.uid;
+      await setDoc(
+        doc(db, "usersandtasks", userUid),
+        { tasks: taskItems },
+        { merge: true }
+      );
+    };
+    setUser();
+  }, [taskItems]);
 
   return (
     <div>
