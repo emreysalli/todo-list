@@ -1,0 +1,9 @@
+#datagridBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 50px auto;
+    min-height: 64.8vh;
+
+}

@@ -1,35 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import AppBar from "./components/AppBar/AppBar.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import Register from "./components/Register/Register.jsx";
 import Login from "./components/Login/Login.jsx";
+import Datagrid from "./components/Datagrid/Datagrid.jsx";
 import MainWindow from "./components/MainWindow/MainWindow.jsx";
 import Footer from "./components/Footer/Footer";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { db, auth } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
 import { doc, setDoc } from "firebase/firestore";
+
 
 function App() {
   const [query, setQuery] = useState("");
   const [taskItems, setTaskItems] = useState([]);
 
-  useEffect(() => {
-    const setUser = async () => {
-      const userUid = auth.currentUser?.uid;
-      await setDoc(
-        doc(db, "usersandtasks", userUid),
-        { tasks: taskItems },
-        { merge: true }
-      );
-    };
-    setUser();
-  }, [taskItems]);
+  
+  const setUser = async (uid) => {
+    
+    await setDoc(
+      doc(db, "usersandtasks", uid),
+      { tasks: taskItems },
+      { merge: true }
+    );
+  };
 
   return (
     <div>
       <Router>
-        <AppBar setQuery={setQuery} setTaskItems={setTaskItems} />
+        <AppBar setQuery={setQuery} setTaskItems={setTaskItems} setUser={setUser} />
 
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -48,6 +48,7 @@ function App() {
               />
             }
           />
+          <Route path="/datagrid" element={<Datagrid taskItems={taskItems}/>} />
         </Routes>
 
         <Footer />

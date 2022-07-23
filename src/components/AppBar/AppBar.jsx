@@ -80,6 +80,7 @@ const ResponsiveAppBar = (props) => {
   });
 
   const logout = async () => {
+    await props.setUser(user.uid);
     await signOut(auth);
     enqueueSnackbar("Exit successful.", {
       variant: "success",
@@ -124,7 +125,7 @@ const ResponsiveAppBar = (props) => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Emre" src="/static/images/avatar/2.jpg" />
+                <Avatar/>
               </IconButton>
             </Tooltip>
             <Menu
@@ -154,6 +155,20 @@ const ResponsiveAppBar = (props) => {
                   </Link>
                 </Typography>
               </MenuItem>
+
+              <MenuItem
+                key={"datagrid"}
+                style={{ display: user ? "block" : "none" }}
+                onClick={handleCloseUserMenu}
+              >
+                <Typography textAlign="center">
+                  <Link className="link" to="/datagrid">
+                    Datagrid
+                  </Link>
+                </Typography>
+              </MenuItem>
+
+
               <MenuItem
                 key={"register"}
                 style={{ display: user ? "none" : "block" }}
