@@ -11,7 +11,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../../firebase-config";
+import { auth, db } from "../../../firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import { useSnackbar } from "notistack";
 
@@ -199,7 +199,12 @@ export default function Register() {
         </FormControl>
       </div>
       <div>
-        <Button variant="outlined" size="large" onClick={signup}>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ m: 1, width: "43ch" }}
+          onClick={signup}
+        >
           Sign Up
         </Button>
       </div>

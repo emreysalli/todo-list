@@ -7,7 +7,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import avatar from "./avatar.jpg";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase-config";
+import { auth, db } from "../../../firebase-config";
 
 function Profile() {
   const [userInfo, setUserInfo] = useState({ name: "", surname: "", mail: "" });

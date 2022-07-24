@@ -9,6 +9,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { db } from "../../firebase-config";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function FormDialog(props) {
   const [tempText, setTempText] = useState(props.task[0].text);
@@ -17,23 +19,28 @@ export default function FormDialog(props) {
     props.task[0].isComplete
   );
 
-  const handleSave = () => {
-    props.setTaskItems(
-      props.taskItems.map((item) =>
-        item.id === props.task[0].id
-          ? {
-              ...item,
-              text: tempText,
-              isComplete: tempisComplete,
-              taskPriority: tempPriority,
-            }
-          : item
-      )
+  const handleSave = async () => {
+    let newTasks = props.taskItems.map((item) =>
+      item.id === props.task[0].id
+        ? {
+            ...item,
+            text: tempText,
+            isComplete: tempisComplete,
+            taskPriority: tempPriority,
+          }
+        : item
     );
+    await props.setTaskItems(newTasks);
     props.enqueueSnackbar("Task updated.", {
       variant: "success",
     });
     props.setOpen(false);
+    props.setUser(props.userUid);
+    await setDoc(
+      doc(db, "usersandtasks", props.userUid),
+      { tasks: newTasks },
+      { merge: true }
+    );
   };
 
   const handleClose = () => {

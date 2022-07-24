@@ -10,7 +10,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../firebase-config.js";
+import { auth, db } from "../../../firebase-config.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { doc, getDoc } from "firebase/firestore";
@@ -108,7 +108,12 @@ export default function LogIn(props) {
       </div>
 
       <div>
-        <Button variant="outlined" size="large" onClick={signin}>
+        <Button
+          sx={{ m: 1, width: "43ch" }}
+          variant="contained"
+          size="large"
+          onClick={signin}
+        >
           Sign In
         </Button>
       </div>

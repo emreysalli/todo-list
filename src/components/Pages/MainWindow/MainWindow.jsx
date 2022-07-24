@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
 import uuid from "react-uuid";
 import "./MainWindow.css";
-import Task from "../Task/Task.jsx";
-import TaskEditDialog from "../TaskEditDialog/TaskEditDialog.jsx";
-import AddRow from "../AddRow/AddRow.jsx";
-import FilterRow from "../FilterRow/FilterRow.jsx";
-import usePagination from "../../Pagination";
+import Task from "../../Task/Task.jsx";
+import TaskEditDialog from "../../TaskEditDialog/TaskEditDialog.jsx";
+import AddRow from "../../AddRow/AddRow.jsx";
+import FilterRow from "../../FilterRow/FilterRow.jsx";
+import usePagination from "../../../Pagination";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import { useSnackbar } from "notistack";
-import { auth, db } from "../../firebase-config";
+import { auth, db } from "../../../firebase-config";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 function MainWindow(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [task, setTask] = useState("");
   const [filteredTask, setFilteredTask] = useState([]);
   const [priority, setPriority] = useState("");
   const [openDialog, setOpenDialog] = useState([false, ""]);
   const [page, setPage] = useState(1);
   const perPage = 5;
-  const { enqueueSnackbar } = useSnackbar();
 
   const priorityObj = {
     Low: "green",
@@ -26,12 +28,27 @@ function MainWindow(props) {
     High: "orange",
     Immediately: "red",
   };
+  const [userUid, setUserUid] = useState("");
+  // firestoredan veriler cekildi
+  useEffect(() => {
+    const getTask = async () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          let userCollectionRef = doc(db, "usersandtasks", user.uid);
+          setUserUid(user.uid);
+          const docSnap = await getDoc(userCollectionRef);
+          props.setTaskItems(docSnap.data()["tasks"]);
+        }
+      });
+    };
+    getTask();
+  }, []);
 
   const handleChange = (event) => {
     setPriority(event.target.value);
   };
 
-  const handleAddTask = (event) => {
+  const handleAddTask = async (event) => {
     event.preventDefault();
     let taskObj = {
       id: uuid(),
@@ -39,7 +56,13 @@ function MainWindow(props) {
       isComplete: false,
       taskPriority: priority,
     };
-    props.setTaskItems([...props.taskItems, taskObj]);
+    await props.setTaskItems([...props.taskItems, taskObj]);
+
+    await setDoc(
+      doc(db, "usersandtasks", userUid),
+      { tasks: [...props.taskItems, taskObj] },
+      { merge: true }
+    );
     setPriority("");
     setTask("");
     enqueueSnackbar("Task added.", {
@@ -54,17 +77,22 @@ function MainWindow(props) {
     itemsCopy[index].isComplete = !itemsCopy[index].isComplete;
 
     props.setTaskItems(itemsCopy);
+    props.setUser(userUid);
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = async (id) => {
     let itemsCopy = [...props.taskItems];
     let index = itemsCopy.findIndex((item) => item.id === id);
     itemsCopy.splice(index, 1);
     props.setTaskItems(itemsCopy);
-
     enqueueSnackbar("Task deleted.", {
       variant: "success",
     });
+    await setDoc(
+      doc(db, "usersandtasks", userUid),
+      { tasks: itemsCopy },
+      { merge: true }
+    );
   };
 
   const filtered = (complete) => {
@@ -100,6 +128,7 @@ function MainWindow(props) {
     });
 
     props.setTaskItems(filtered);
+    props.setUser(userUid);
   };
 
   const filterTask = (task) => {
@@ -133,6 +162,8 @@ function MainWindow(props) {
           taskItems={props.taskItems}
           setTaskItems={props.setTaskItems}
           enqueueSnackbar={enqueueSnackbar}
+          userUid={userUid}
+          setUser={props.setUser}
         />
       )}
       <AddRow
